@@ -3,7 +3,6 @@ package com.qa.MapTests;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -97,36 +96,38 @@ public class AccountServiceTest {
 	@Test
 	public void getCountForFirstNamesInAccountWhenZeroOccurances() {
 
-		for (Map.Entry<Integer, Account> entry : amr.getAccountMap().entrySet()) {
-			if (entry.getValue().getFirstName() != null) {
-				counter += 1;
-			}
-		}
-		assertEquals(0, counter);
+		assertEquals(0, amr.countFirstNames());
 
 	}
 
 	@Test
 	public void getCountForFirstNamesInAccountWhenOne() {
 		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
-		for (Map.Entry<Integer, Account> entry : amr.getAccountMap().entrySet()) {
-			if (entry.getValue().getFirstName() != null) {
-				counter += 1;
-			}
-		}
-		assertEquals(1, counter);
+		assertEquals(1, amr.countFirstNames());
 	}
 
 	@Test
 	public void getCountForFirstNamesInAccountWhenTwo() {
 		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
 		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
-		for (Map.Entry<Integer, Account> entry : amr.getAccountMap().entrySet()) {
-			if (entry.getValue().getFirstName() != null) {
-				counter += 1;
-			}
-		}
-		assertEquals(2, counter);
+		assertEquals(2, amr.countFirstNames());
 	}
 
+	@Test
+	public void findMapEntryWhereNameIsMatty() {
+
+		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc3));
+		assertEquals(2, amr.findName("Matty"));
+
+	}
+
+	@Test
+	public void findNumberOfMattsInMap() {
+		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc3));
+		assertEquals(1, amr.findName("Matt"));
+	}
 }

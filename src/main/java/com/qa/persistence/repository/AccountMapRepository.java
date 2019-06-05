@@ -75,4 +75,35 @@ public class AccountMapRepository implements AccountRepository {
 
 	}
 
+	public int countFirstNames() {
+		int counter = 0;
+		for (Map.Entry<Integer, Account> entry : this.getAccountMap().entrySet()) {
+			if (entry.getValue().getFirstName() != null) {
+				counter++;
+			}
+		}
+
+		return counter;
+	}
+
+	public int findName(String name) {
+		for (Map.Entry<Integer, Account> entry : this.getAccountMap().entrySet()) {
+			if (entry.getValue().getFirstName().equalsIgnoreCase(name)) {
+				return (entry.getKey());
+			}
+		}
+		return -1;
+	}
+
+	public int findNames(String name) {
+		int counter = 0;
+		for (Map.Entry<Integer, Account> entry : this.getAccountMap().entrySet()) {
+			if (entry.getValue().getFirstName().equalsIgnoreCase(name)) {
+				counter++;
+			}
+		}
+		System.out.println("Found " + counter + " instances of " + name + " in map");
+		return counter;
+	}
+
 }
