@@ -1,10 +1,11 @@
 package com.qa.MapTests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.qa.persistence.domain.Account;
@@ -13,86 +14,119 @@ import com.qa.util.JSONUtil;
 
 public class AccountServiceTest {
 
-	private AccountMapRepository amr = new AccountMapRepository(new HashMap<Integer, Account>());
+	private AccountMapRepository amr;
+	private Account acc1;
+	private Account acc2;
+	private Account acc3;
+	private String test;
+	int counter;
+
+	@Before
+	public void start() {
+		amr = new AccountMapRepository(new HashMap<Integer, Account>());
+		acc1 = new Account(1, "1", "Matt", "Hunt");
+		acc2 = new Account(2, "2", "Matty", "Huntsworth");
+		acc3 = new Account(3, "3", "Matthew", "Hunter");
+		test = "{\"id\":2,\"accountNumber\":\"2\",\"firstName\":\"Matty\",\"lastName\":\"Huntsworth\"}";
+		counter = 0;
+	}
 
 	@Test
 	public void addAccountTest() {
-
-		Account acc1 = new Account(1, "1", "Matt", "Hunt");
-		String util = new JSONUtil().getJSONForObject(acc1);
-		assertEquals("Added Successfully", amr.createAccount(util));
+		System.out.println(new JSONUtil().getJSONForObject(acc1));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
+		assertEquals(true, amr.getAccountMap().containsKey((Integer) 1));
 
 	}
 
 	@Test
 	public void add2AccountsTest() {
-		Account acc2 = new Account(2, "2", "Matty", "Huntsworth");
-		Account acc1 = new Account(3, "3", "Matthew", "Hunter");
+
 		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
-		String util = new JSONUtil().getJSONForObject(acc1);
-		assertEquals("Added Successfully", amr.createAccount(util));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
+		assertEquals(true, amr.getAccountMap().containsKey((Integer) 1));
+		assertEquals(true, amr.getAccountMap().containsKey((Integer) 2));
 
 	}
 
 	@Test
-	public void removeAccountTest() { //
-		Account acc2 = new Account(2, "2", "Matthew", "Hunter");
+	public void removeAccountTest() {
+
 		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
-		assertEquals("Removed Successfully", amr.deleteAccount(2));
+		amr.deleteAccount(2);
+		assertEquals(false, amr.getAccountMap().containsKey((Integer) 2));
 	}
 
 	@Test
 	public void remove2AccountsTest() {
-		Account acc2 = new Account(2, "2", "Matty", "Huntsworth");
-		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
-		Account acc1 = new Account(3, "3", "Matthew", "Hunter");
+
 		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
-		assertEquals("Removed Successfully", amr.deleteAccount(2));
-		assertEquals("Removed Successfully", amr.deleteAccount(3));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
+		amr.deleteAccount(1);
+		amr.deleteAccount(2);
+		assertEquals(false, amr.getAccountMap().containsKey((Integer) 1));
+		assertEquals(false, amr.getAccountMap().containsKey((Integer) 2));
 	}
 
 	@Test
 	public void remove2AccountTestAnd1ThatDoesntExist() {
-		Account acc1 = new Account(1, "1", "Matt", "Hunt");
-		Account acc2 = new Account(2, "2", "Matty", "Huntsworth");
-		Account acc3 = new Account(3, "3", "Matthew", "Hunter");
-		amr.createAccount(new JSONUtil().getJSONForObject(acc3));
-		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
 		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
-		assertEquals("Removed Successfully", amr.deleteAccount(2));
-		assertEquals("Removed Successfully", amr.deleteAccount(3));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
+		amr.deleteAccount(1);
+		amr.deleteAccount(2);
 		assertEquals("Record does not exist", amr.deleteAccount(4));
-		// assertEquals("Record does not exist", amr.deleteAccount(2));
 	}
 
 	@Test
 	public void jsonStringToAccountConversionTest() {
 		// testing JSONUtil
-		fail("TODO");
+
+		Account util = new JSONUtil().getObjectForJSON(test, Account.class);
+		System.out.println(util);
+		assertEquals("Account 2 belongs to Matty Huntsworth", util.toString());
 	}
 
 	@Test
 	public void accountConversionToJSONTest() {
 		// testing JSONUtil
-		fail("TODO");
+
+		assertEquals(test, new JSONUtil().getJSONForObject(acc2));
+
 	}
 
 	@Test
 	public void getCountForFirstNamesInAccountWhenZeroOccurances() {
-		// For a later piece of functionality
-		fail("TODO");
+
+		for (Map.Entry<Integer, Account> entry : amr.getAccountMap().entrySet()) {
+			if (entry.getValue().getFirstName() != null) {
+				counter += 1;
+			}
+		}
+		assertEquals(0, counter);
+
 	}
 
 	@Test
 	public void getCountForFirstNamesInAccountWhenOne() {
-		// For a later piece of functionality f
-		fail("TODO");
+		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
+		for (Map.Entry<Integer, Account> entry : amr.getAccountMap().entrySet()) {
+			if (entry.getValue().getFirstName() != null) {
+				counter += 1;
+			}
+		}
+		assertEquals(1, counter);
 	}
 
 	@Test
 	public void getCountForFirstNamesInAccountWhenTwo() {
-		// For a later piece of functionality
-		fail("TODO");
+		amr.createAccount(new JSONUtil().getJSONForObject(acc1));
+		amr.createAccount(new JSONUtil().getJSONForObject(acc2));
+		for (Map.Entry<Integer, Account> entry : amr.getAccountMap().entrySet()) {
+			if (entry.getValue().getFirstName() != null) {
+				counter += 1;
+			}
+		}
+		assertEquals(2, counter);
 	}
 
 }

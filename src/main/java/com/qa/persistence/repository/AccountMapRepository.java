@@ -53,16 +53,12 @@ public class AccountMapRepository implements AccountRepository {
 		try {
 			if (this.getAccountMap().containsKey(accountNumber)) {
 				this.getAccountMap().remove(accountNumber);
-				// System.out.println("Removed Successfully");
 				return "Removed Successfully";
 			} else {
-				// System.out.println("Not Removed Successfully");
-
 				return "Record does not exist";
 			}
 
 		} catch (Exception e) {
-			System.out.println(e.toString());
 			return e.getMessage();
 		}
 
