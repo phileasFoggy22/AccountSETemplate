@@ -2,10 +2,10 @@ package com.qa.util;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonParseException;
 
 public class JSONUtil {
 
@@ -44,14 +44,5 @@ public class JSONUtil {
 		return null;
 
 	}
-
-	// public String getGSONForObject(Object obj) {
-	// return gson.toJson(obj);
-	// }
-
-	// public <T> T getObjectForJSON(String jsonString, Class<T> clazz) {
-	//
-	// return gson.fromJson(jsonString, clazz);
-	// }
 
 }
