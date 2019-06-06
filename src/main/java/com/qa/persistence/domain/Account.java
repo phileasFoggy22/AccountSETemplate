@@ -1,5 +1,14 @@
 package com.qa.persistence.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity
 public class Account {
 
 	// This class needs to have:
@@ -7,10 +16,15 @@ public class Account {
 	// An Account Number
 	// A First Name
 	// A last Name
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private int id;
+	@Column(length = 50)
 	private String accountNumber;
+	@Column(length = 100)
 	private String firstName;
+	@Column(length = 100)
 	private String lastName;
 
 	public Account(int id, String accountNumber, String firstName, String lastName) {
@@ -55,11 +69,6 @@ public class Account {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Account " + accountNumber + " belongs to " + firstName + " " + lastName);
 	}
 
 }
