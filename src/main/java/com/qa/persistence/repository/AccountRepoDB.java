@@ -32,9 +32,7 @@ public class AccountRepoDB implements AccountRepository {
 		Account anAccount = util.getObjectForJSON(accountJSON, Account.class);
 		System.out.println("error: " + anAccount);
 
-		manager.getTransaction().begin();
 		manager.persist(anAccount);
-		manager.getTransaction().commit();
 
 		return "{\"message\": \"account sucessfully added\"}";
 	}
@@ -56,9 +54,12 @@ public class AccountRepoDB implements AccountRepository {
 	@Override
 	@Transactional(TxType.REQUIRED)
 	public String updateAccount(int accountNumber, String accountJSON) {
-		Account anAccount = manager.find(Account.class, accountNumber);
-		manager.remove(anAccount);
-		manager.persist(util.getObjectForJSON(accountJSON, Account.class));
+		Account anAccount = util.getObjectForJSON(accountJSON, Account.class);
+		Account updateThisAccount = manager.find(Account.class, accountNumber);
+		updateThisAccount.setFirstName(anAccount.getFirstName());
+		updateThisAccount.setLastName(anAccount.getLastName());
+		updateThisAccount.setAccountNumber(anAccount.getAccountNumber());
+		manager.persist(updateThisAccount);
 		return "{\"message\": \"account sucessfully updated\"}";
 	}
 
